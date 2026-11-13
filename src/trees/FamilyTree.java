@@ -24,6 +24,9 @@ public class FamilyTree {
         }
 
         void addChild(TreeNode childNode) {
+            System.out.println(childNode.getName());
+            children.add(childNode);
+            childNode.parent=parent;
             // Add childNode to this node's children list. Also
             // set childNode's parent to this node.
         }
@@ -38,9 +41,9 @@ public class FamilyTree {
             // No, recurse. Check all children of this node.
             for (TreeNode child: children)
             {
-
+                System.out.println(child.getName());
                 //Test
-                if(null !=child.getNodeWithName(targetName)){
+                if(child.getName()==targetName){
                     return child;
                 }
                 
@@ -118,12 +121,12 @@ public class FamilyTree {
     private void addLine(String line) throws TreeException
     {
         // Extract parent and array of children.
-        int colonIndex = line.indexOf(",",0); //should be the index of the colon in line.
+        int colonIndex = line.indexOf(":"); //should be the index of the colon in line.
         if (colonIndex < 0)
             throw  new TreeException("invalid index");
         String parent = line.substring(0, colonIndex);//The substring of line that starts at char #0 and ends just before colonIndex. Check the API for 
                            //class java.util.String, method substring(), if you need guidance.
-        String childrenString =line.substring(colonIndex); //?? The substring of line that starts just after colonIndex and goes through the end of
+        String childrenString =line.substring(colonIndex+1); //?? The substring of line that starts just after colonIndex and goes through the end of
                                   // the line. You'll use a different version of substring().
         String[] childrenArray = childrenString.split(",");//. Check the API for details. The result will be an array
                                   //  of strings, with the separating commas thrown away.
@@ -132,20 +135,28 @@ public class FamilyTree {
         // parent node must be constructed. Otherwise the parent node should be 
         // somewhere in the tree.
         TreeNode parentNode;
-        if (root == null)
-            parentNode = root = new TreeNode(parent);
-        else
-        {
-            parentNode = root.getNodeWithName(parent);//  There's a method in Node that searches for a named node. 
-            if(parentNode==null)
-            { //??? If the parent node wasn't found, there must have been something wrong in the 
-                throw new TreeException("Invalid File Data");
-            }
+        
+        if (root == null){
+            parentNode = new TreeNode(parent);
+            root = parentNode;
         }
+
+        System.out.println("Test AddLine 1");
+        System.out.println("Test AddLine 1:" + parent);
+        parentNode = root.getNodeWithName(parent);//  There's a method in Node that searches for a named node. 
+        System.out.println("Test AddLine 2");
+        if(parentNode==null)
+        { //??? If the parent node wasn't found, there must have been something wrong in the 
+            System.out.println("Test AddLine 3");
+            throw new TreeException("Invalid File Data");
+        }
+        System.out.println("Test AddLine 4");
         
         // Add child nodes to parentNode.
         for(String child : childrenArray){
-            parentNode.addChild(new TreeNode(child));
+            System.out.println("Test AddLine 5");
+            TreeNode nchild = new TreeNode(child);
+            parentNode.addChild(nchild);
         }
         //?? For each name in childrenArray, create a new node and add that node to parentNode.
     }
@@ -192,11 +203,15 @@ public class FamilyTree {
         try {
             FamilyTree tree = new FamilyTree();
             System.out.println("Tree:\n" + tree + "\n**************\n");
+            System.out.println("Test1");
             TreeNode ancestor = tree.getMostRecentCommonAncestor("Bilbo", "Frodo");
+            System.out.println("Test2");
             System.out.println("Most recent common ancestor of Bilbo and Frodo is " + ancestor.getName());
         } catch (TreeException x) {
+            System.out.println("Test3");
             System.out.println("IO trouble: " + x.getMessage());
         } catch (IOException x) {
+            System.out.println("Test4");
             System.out.println("Input file trouble: " + x.getMessage());
         }
     }
