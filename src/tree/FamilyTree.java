@@ -36,6 +36,7 @@ public class FamilyTree {
             // No, recurse. Check all children of this node.
             for (TreeNode child: children)
             {
+                //Test
                 // If child.getNodeWithName(targetName) returns a non-null node,
                 // then that's the node we're looking for. Return it.
             }
